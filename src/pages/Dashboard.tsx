@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CalendarDays, ClipboardCheck, Heart, House } from "lucide-react";
+import { CalendarDays, ClipboardCheck, Heart, Home } from "lucide-react";
 import { hostels } from "../data/hostels";
 import { useSavedHostels } from "../hooks/useSavedHostels";
 import HostelCard from "../components/HostelCard";
@@ -32,7 +32,7 @@ export default function Dashboard() {
         <p className="mt-1 text-subink">Here's what's happening with your accommodation search.</p>
 
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <SummaryCard icon={House} label="Current Booking" value={currentBooking.hostel.name} />
+          <SummaryCard icon={Home} label="Current Booking" value={currentBooking.hostel.name} />
           <SummaryCard icon={ClipboardCheck} label="Booking Status" value={currentBooking.status} accent />
           <SummaryCard icon={Heart} label="Saved Hostels" value={String(savedHostels.length)} />
           <SummaryCard icon={CalendarDays} label="Upcoming Move-in" value={currentBooking.moveIn} />
@@ -99,7 +99,7 @@ export default function Dashboard() {
   );
 }
 
-function SummaryCard({ icon: Icon, label, value, accent }: { icon: typeof House; label: string; value: string; accent?: boolean }) {
+function SummaryCard({ icon: Icon, label, value, accent }: { icon: typeof Home; label: string; value: string; accent?: boolean }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${accent ? "bg-amber-50 text-amber-600" : "bg-brand-light text-brand-blue"}`}>
