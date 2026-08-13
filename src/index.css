@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-bg text-ink antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+:focus-visible {
+  outline: 2px solid #0B5CAB;
+  outline-offset: 2px;
+}
+
+.container-page {
+  @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
