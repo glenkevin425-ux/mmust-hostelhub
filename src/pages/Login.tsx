@@ -23,7 +23,7 @@ export default function Login() {
 
     const normalizedEmail = email.trim().toLowerCase();
     if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
-      setMessage({ type: "error", text: "Enter a valid student email address." });
+      setMessage({ type: "error", text: "Enter a valid email address." });
       return;
     }
     if (password.length < 6) {
@@ -48,7 +48,7 @@ export default function Login() {
     setMessage(null);
     const normalizedEmail = email.trim().toLowerCase();
     if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
-      setMessage({ type: "error", text: "Enter your student email first, then tap Forgot password." });
+      setMessage({ type: "error", text: "Enter your email first, then tap Forgot password." });
       return;
     }
 
@@ -67,7 +67,7 @@ export default function Login() {
           <div>
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-blue"><GraduationCap size={24} /></span>
             <h2 className="mt-8 text-3xl font-bold tracking-tight">Your hostel search, securely connected.</h2>
-            <p className="mt-4 leading-7 text-slate-300">Sign in with your student account to manage bookings, saved hostels and your accommodation profile.</p>
+            <p className="mt-4 leading-7 text-slate-300">Sign in to manage bookings, saved hostels and your accommodation profile.</p>
           </div>
           <div className="space-y-3 text-sm text-slate-300">
             <p className="flex items-center gap-2"><ShieldCheck size={17} /> Secure session management</p>
@@ -85,10 +85,10 @@ export default function Login() {
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
               <div>
-                <label htmlFor="email" className="text-sm font-medium text-ink">Student Email</label>
+                <label htmlFor="email" className="text-sm font-medium text-ink">Email</label>
                 <div className="relative mt-1.5">
                   <Mail className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@students.mmust.ac.ke" className="w-full rounded-xl border border-slate-200 py-3 pl-10 pr-3.5 text-sm focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/10" />
+                  <input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@gmail.com" className="w-full rounded-xl border border-slate-200 py-3 pl-10 pr-3.5 text-sm focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/10" />
                 </div>
               </div>
 
