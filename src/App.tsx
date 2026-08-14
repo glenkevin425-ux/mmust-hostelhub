@@ -9,6 +9,7 @@ import BookingConfirmation from "./pages/BookingConfirmation";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
 import Saved from "./pages/Saved";
 import About from "./pages/About";
 
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/hostels/:id" element={<HostelDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/saved" element={<ProtectedRoute><Saved /></ProtectedRoute>} />
