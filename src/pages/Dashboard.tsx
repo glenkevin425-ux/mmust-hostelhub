@@ -1,37 +1,47 @@
 import { Link, useNavigate } from "react-router-dom";
-import { CalendarDays, ClipboardCheck, Heart, Home, LogOut } from "lucide-react";
+import { CalendarDays, ClipboardCheck, Heart, Home, LogOut, XCircle } from "lucide-react";
 import { hostels } from "../data/hostels";
+import { getHostelById } from "../data/hostels";
 import { useSavedHostels } from "../hooks/useSavedHostels";
 import HostelCard from "../components/HostelCard";
 import EmptyState from "../components/EmptyState";
 import Button from "../components/Button";
 import { useAuth } from "../context/AuthContext";
-
-const currentBooking = {
-  hostel: hostels[0],
-  room: hostels[0].roomTypes[0],
-  status: "Pending",
-  moveIn: "September 1, 2026",
-};
-
-const activity = [
-  { label: "Booking request submitted", time: "Today" },
-  { label: "Hostel saved", time: "Yesterday" },
-  { label: "Profile updated", time: "3 days ago" },
-];
+import { addActivity, clearBooking, getActivities, getBooking, type ActivityRecord, type BookingRecord } from "../lib/booking";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const { saved, isSaved, toggleSaved } = useSavedHostels();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [booking, setBooking] = useState<BookingRecord | null>(null);
+  const [activity, setActivity] = useState<ActivityRecord[]>([]);
   const savedHostels = hostels.filter((h) => saved.includes(h.id));
   const fullName = user?.user_metadata?.full_name as string | undefined;
   const firstName = fullName?.split(" ")[0] || user?.email?.split("@")[0] || "Student";
+
+  useEffect(() => {
+    if (!user) return;
+    setBooking(getBooking(user.id));
+    setActivity(getActivities(user.id));
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/login", { replace: true });
   };
+
+  const handleCancelBooking = () => {
+    if (!user || !booking) return;
+    const confirmed = window.confirm("Cancel this booking request? This cannot be undone.");
+    if (!confirmed) return;
+    clearBooking(user.id);
+    addActivity(user.id, `Booking request cancelled · ${booking.ref}`);
+    setBooking(null);
+    setActivity(getActivities(user.id));
+  };
+
+  const bookedHostel = booking ? getHostelById(booking.hostelId) : undefined;
 
   return (
     <div className="bg-bg py-10">
@@ -45,28 +55,41 @@ export default function Dashboard() {
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <SummaryCard icon={Home} label="Current Booking" value={currentBooking.hostel.name} />
-          <SummaryCard icon={ClipboardCheck} label="Booking Status" value={currentBooking.status} accent />
+          <SummaryCard icon={Home} label="Current Booking" value={booking?.hostelName || "No active booking"} />
+          <SummaryCard icon={ClipboardCheck} label="Booking Status" value={booking?.status || "None"} accent />
           <SummaryCard icon={Heart} label="Saved Hostels" value={String(savedHostels.length)} />
-          <SummaryCard icon={CalendarDays} label="Upcoming Move-in" value={currentBooking.moveIn} />
+          <SummaryCard icon={CalendarDays} label="Upcoming Move-in" value={booking?.moveInDate ? formatDate(booking.moveInDate) : "—"} />
         </div>
 
         <section className="mt-10">
           <h2 className="font-semibold text-ink">My Booking</h2>
-          <div className="mt-3 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex gap-4">
-              <img src={currentBooking.hostel.images[0]} alt={currentBooking.hostel.name} className="h-20 w-20 rounded-xl object-cover" />
-              <div>
-                <p className="font-semibold text-ink">{currentBooking.hostel.name}</p>
-                <p className="text-sm text-subink">{currentBooking.room.name}</p>
-                <span className="mt-1.5 inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-600">{currentBooking.status}</span>
-                <p className="mt-1 text-xs text-subink">Move-in: {currentBooking.moveIn}</p>
+          <div className="mt-3 rounded-2xl border border-slate-200 bg-white p-6">
+            {booking && bookedHostel ? (
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex gap-4">
+                  <img src={bookedHostel.images[0]} alt={bookedHostel.name} className="h-20 w-20 rounded-xl object-cover" />
+                  <div>
+                    <p className="font-semibold text-ink">{booking.hostelName}</p>
+                    <p className="text-sm text-subink">{booking.roomName}</p>
+                    <span className="mt-1.5 inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-600">{booking.status}</span>
+                    <p className="mt-1 text-xs text-subink">Move-in: {formatDate(booking.moveInDate)}</p>
+                    <p className="mt-1 text-xs text-subink">Reference: {booking.ref}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Link to={`/hostels/${booking.hostelId}`}><Button variant="outline">View Hostel</Button></Link>
+                  {booking.status === "Pending" && <Button variant="ghost" onClick={handleCancelBooking}><XCircle size={16} /> Cancel Request</Button>}
+                </div>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <Link to={`/hostels/${currentBooking.hostel.id}`}><Button variant="outline">View Booking</Button></Link>
-              <Button variant="ghost">Cancel Request</Button>
-            </div>
+            ) : (
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="font-medium text-ink">No active booking request.</p>
+                  <p className="mt-1 text-sm text-subink">Find a hostel and submit a request when you're ready.</p>
+                </div>
+                <Link to="/hostels"><Button>Explore Hostels</Button></Link>
+              </div>
+            )}
           </div>
         </section>
 
@@ -80,12 +103,36 @@ export default function Dashboard() {
         <section className="mt-10">
           <h2 className="font-semibold text-ink">Recent Activity</h2>
           <ul className="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white">
-            {activity.map((item) => <li key={item.label} className="flex items-center justify-between px-5 py-3.5 text-sm"><span className="text-ink">{item.label}</span><span className="text-subink">{item.time}</span></li>)}
+            {activity.length === 0 ? (
+              <li className="px-5 py-4 text-sm text-subink">No recent activity yet.</li>
+            ) : activity.slice(0, 5).map((item) => (
+              <li key={item.id} className="flex items-center justify-between gap-4 px-5 py-3.5 text-sm">
+                <span className="text-ink">{item.label}</span>
+                <span className="shrink-0 text-subink">{relativeTime(item.timestamp)}</span>
+              </li>
+            ))}
           </ul>
         </section>
       </div>
     </div>
   );
+}
+
+function formatDate(value: string) {
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+}
+
+function relativeTime(value: string) {
+  const diff = Date.now() - new Date(value).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
 function SummaryCard({ icon: Icon, label, value, accent }: { icon: typeof Home; label: string; value: string; accent?: boolean }) {
