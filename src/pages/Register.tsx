@@ -35,11 +35,12 @@ export default function Register() {
     }
 
     if (result.needsEmailConfirmation) {
-      setMessage({ type: "success", text: "Account created. Check your email and confirm your address before signing in." });
+      setMessage({ type: "success", text: "Account created. Please confirm your email before signing in." });
       return;
     }
 
-    navigate("/dashboard", { replace: true });
+    setMessage({ type: "success", text: "Account created successfully!" });
+    setTimeout(() => navigate("/dashboard", { replace: true }), 500);
   };
 
   return (
