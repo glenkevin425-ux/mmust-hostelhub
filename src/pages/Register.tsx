@@ -52,7 +52,7 @@ export default function Register() {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 grid gap-5 sm:grid-cols-2" noValidate>
-          <div className="sm:col-span-2"><Field label="Full Name"><input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="e.g. Kevin Okello" className={inputClass} autoComplete="name" /></Field></div>
+          <div className="sm:col-span-2"><Field label="Full Name"><input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="e.g. Thomas Matthews" className={inputClass} autoComplete="name" /></Field></div>
           <div className="sm:col-span-2"><Field label="Email"><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@gmail.com" className={inputClass} autoComplete="email" /></Field></div>
           <Field label="Password">
             <div className="relative"><input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 8 characters" className={`${inputClass} pr-11`} autoComplete="new-password" /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((value) => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
