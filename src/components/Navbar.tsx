@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X, Heart } from "lucide-react";
 import Button from "./Button";
 import mmustLogo from "../assets/mmust-logo.jpg";
+import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -70,9 +72,11 @@ export default function Navbar() {
           >
             <Heart size={18} />
           </Link>
-          <Link to="/login">
-            <Button variant="ghost" size="sm">Login</Button>
-          </Link>
+          {!user && (
+            <Link to="/login">
+              <Button variant="ghost" size="sm">Login</Button>
+            </Link>
+          )}
           <Link to="/hostels">
             <Button size="sm">Find a Hostel</Button>
           </Link>
@@ -106,9 +110,11 @@ export default function Navbar() {
             </NavLink>
           </nav>
           <div className="mt-4 flex gap-2">
-            <Link to="/login" className="flex-1">
-              <Button variant="outline" fullWidth>Login</Button>
-            </Link>
+            {!user && (
+              <Link to="/login" className="flex-1">
+                <Button variant="outline" fullWidth>Login</Button>
+              </Link>
+            )}
             <Link to="/hostels" className="flex-1">
               <Button fullWidth>Find a Hostel</Button>
             </Link>
