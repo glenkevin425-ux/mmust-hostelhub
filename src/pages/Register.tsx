@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useAuth } from "../context/AuthContext";
 
+const STUDENT_EMAIL_DOMAIN = "@students.mmust.ac.ke";
+
 export default function Register() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
@@ -24,6 +26,7 @@ export default function Register() {
     if (fullName.trim().length < 2) return setMessage({ type: "error", text: "Enter your full name." });
     if (registrationNumber.trim().length < 4) return setMessage({ type: "error", text: "Enter your MMUST registration number." });
     if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) return setMessage({ type: "error", text: "Enter a valid student email address." });
+    if (!normalizedEmail.endsWith(STUDENT_EMAIL_DOMAIN)) return setMessage({ type: "error", text: `Use your MMUST student email ending in ${STUDENT_EMAIL_DOMAIN}.` });
     if (password.length < 8) return setMessage({ type: "error", text: "Use a password with at least 8 characters." });
     if (password !== confirmPassword) return setMessage({ type: "error", text: "The passwords do not match." });
 
@@ -37,7 +40,7 @@ export default function Register() {
     }
 
     if (result.needsEmailConfirmation) {
-      setMessage({ type: "success", text: "Account created. Check your student email and confirm your address before signing in." });
+      setMessage({ type: "success", text: "Account created. Check your MMUST student email and confirm your address before signing in." });
       return;
     }
 
@@ -50,7 +53,7 @@ export default function Register() {
         <div className="text-center">
           <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue text-white"><GraduationCap size={22} /></span>
           <h1 className="mt-4 text-2xl font-bold text-brand-navy sm:text-3xl">Create your student account</h1>
-          <p className="mt-2 text-sm text-subink">Use your MMUST details to access bookings and your dashboard.</p>
+          <p className="mt-2 text-sm text-subink">Use your MMUST student details to access bookings and your dashboard.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 grid gap-5 sm:grid-cols-2" noValidate>
@@ -58,7 +61,7 @@ export default function Register() {
           <Field label="Registration Number"><input value={registrationNumber} onChange={(e) => setRegistrationNumber(e.target.value)} placeholder="e.g. CE/1234/21" className={inputClass} /></Field>
           <div className="sm:col-span-2"><Field label="Student Email"><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@students.mmust.ac.ke" className={inputClass} autoComplete="email" /></Field></div>
           <Field label="Password">
-            <div className="relative"><input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 8 characters" className={`${inputClass} pr-11`} autoComplete="new-password" /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
+            <div className="relative"><input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 8 characters" className={`${inputClass} pr-11`} autoComplete="new-password" /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((value) => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
           </Field>
           <Field label="Confirm Password"><input type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repeat your password" className={inputClass} autoComplete="new-password" /></Field>
 
