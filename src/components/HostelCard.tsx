@@ -60,7 +60,7 @@ export default function HostelCard({ hostel, isSaved, onToggleSave }: HostelCard
             <p className="text-xs text-subink">From</p>
             <p className="font-bold text-brand-navy">
               KSh {hostel.price.toLocaleString()}
-              <span className="text-xs font-medium text-subink">/month</span>
+              <span className="text-xs font-medium text-subink">/semester</span>
             </p>
           </div>
           <Link
