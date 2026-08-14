@@ -28,7 +28,7 @@ export default function RoomCard({ room, selected, onSelect }: RoomCardProps) {
 
       <p className="mt-4 font-bold text-brand-navy">
         KSh {room.price.toLocaleString()}
-        <span className="text-xs font-medium text-subink">/month</span>
+        <span className="text-xs font-medium text-subink">/semester</span>
       </p>
 
       <p className="mt-1 text-xs font-medium text-subink">
