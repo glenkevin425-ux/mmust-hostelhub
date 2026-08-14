@@ -38,7 +38,7 @@ export default function BookingSummary({ hostel, room, moveInDate }: BookingSumm
         <span className="font-semibold text-ink">Total</span>
         <span className="text-lg font-bold text-brand-navy">
           KSh {room.price.toLocaleString()}
-          <span className="text-xs font-medium text-subink">/month</span>
+          <span className="text-xs font-medium text-subink">/semester</span>
         </span>
       </div>
     </div>
