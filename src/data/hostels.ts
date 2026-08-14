@@ -1,8 +1,8 @@
 import { Hostel } from "../types";
-import hall1Photo from "../assets/hostels/hall-1.jpg";
-import hall2Photo from "../assets/hostels/hall-2.jpg";
-import hall3Photo from "../assets/hostels/hall-3.jpg";
-import hall4Photo from "../assets/hostels/hall-4.jpg";
+import hall1Photo from "../assets/hostels/hall-1.png";
+import hall2Photo from "../assets/hostels/hall-2.png";
+import hall3Photo from "../assets/hostels/hall-3.png";
+import hall4Photo from "../assets/hostels/hall-4.png";
 
 // NOTE: Placeholder prices, facilities and ratings below —
 // replace with real figures from the MMUST accommodation office.
