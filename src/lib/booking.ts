@@ -1,4 +1,4 @@
-import type { Hostel, RoomType } from "../types/hostel";
+import type { Hostel, RoomType } from "../types";
 
 export type BookingStatus = "Pending" | "Cancelled";
 
