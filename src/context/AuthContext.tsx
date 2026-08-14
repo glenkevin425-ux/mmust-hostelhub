@@ -7,7 +7,7 @@ interface AuthContextValue {
   loading: boolean;
   configured: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
-  signUp: (email: string, password: string, fullName: string, registrationNumber: string) => Promise<{ error?: string; needsEmailConfirmation?: boolean }>;
+  signUp: (email: string, password: string, fullName: string) => Promise<{ error?: string; needsEmailConfirmation?: boolean }>;
   resetPassword: (email: string) => Promise<{ error?: string }>;
   updatePassword: (password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
@@ -55,13 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: "Unable to reach the authentication service. Check your internet connection and try again." };
       }
     },
-    async signUp(email, password, fullName, registrationNumber) {
+    async signUp(email, password, fullName) {
       if (!supabase || !authIsConfigured) return { error: configurationError() };
       try {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: fullName, registration_number: registrationNumber } },
+          options: { data: { full_name: fullName } },
         });
         if (error) return { error: error.message };
         return { needsEmailConfirmation: !data.session };
