@@ -15,6 +15,12 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+// Always send authentication emails back to the deployed application.
+// This prevents confirmation/reset links from pointing to localhost when
+// an account is created during local development or when the email is opened
+// on another device.
+const APP_URL = (import.meta.env.VITE_APP_URL as string | undefined)?.replace(/\/$/, "") || "https://mmust-hostelhub.vercel.app";
+
 function configurationError() {
   return "Authentication is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your Vercel environment variables.";
 }
@@ -61,7 +67,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: fullName } },
+          options: {
+            data: { full_name: fullName },
+            emailRedirectTo: `${APP_URL}/login`,
+          },
         });
         if (error) return { error: error.message };
         return { needsEmailConfirmation: !data.session };
@@ -72,7 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async resetPassword(email) {
       if (!supabase || !authIsConfigured) return { error: configurationError() };
       try {
-        const redirectTo = `${window.location.origin}/reset-password`;
+        const redirectTo = `${APP_URL}/reset-password`;
         const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
         return error ? { error: error.message } : {};
       } catch {
