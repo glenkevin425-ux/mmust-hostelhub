@@ -24,7 +24,11 @@ drop policy if exists "Users can view their own payments" on public.payments;
 create policy "Users can view their own payments"
 on public.payments for select
 to authenticated
-using (auth.uid() = user_id);
+using (auth.uid() = user_id or (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
--- Verification is intentionally not exposed to normal users.
--- An admin workflow can later update status to verified/rejected.
+drop policy if exists "Admins can update payment status" on public.payments;
+create policy "Admins can update payment status"
+on public.payments for update
+to authenticated
+using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
+with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
